@@ -44,7 +44,7 @@ const resultDisplay = document.getElementById("result");
 const errorsDisplay = document.getElementById("errors");
 
 function drawHangmanPart(part) {
-    hangmanContext.lineWidth = 2;
+    hangmanContext.lineWidth = 4;
     hangmanContext.strokeStyle = "#333";
 
     switch (part) {
@@ -138,7 +138,7 @@ function handleLetterClick(event) {
             mistakes++;  
             remainingGuesses--;
             updateErrorsDisplay();
-            drawHangmanPart(10 -mistakes);  
+            drawHangmanPart(10 - mistakes);  
         }
 
         checkGameStatus();

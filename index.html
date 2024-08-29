@@ -43,6 +43,9 @@ const hangmanContext = hangmanCanvas.getContext("2d");
 const resultDisplay = document.getElementById("result");
 const errorsDisplay = document.getElementById("errors");
 
+//TODO - ajustar posicionamento gif
+//TODO - ajustar background e estilos
+
 function drawHangmanPart(part) {
     hangmanContext.lineWidth = 4;
     hangmanContext.strokeStyle = "#333";
@@ -199,8 +202,9 @@ function handleFirstYesClick() {
 }
 
 function handleNoClick() {
-    resultDisplay.textContent = "Você escolheu não :(";
-    resultDisplay.innerHTML = ""; 
+
+    //TODO - Refact para quando clicar não, apresentar mensagem
+    location.reload();
 }
 
 function showRetryButton() {

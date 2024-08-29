@@ -135,10 +135,10 @@ function handleLetterClick(event) {
         if (selectedWord.includes(letter)) {
             updateWordDisplay();
         } else {
-            mistakes++;
+            mistakes++;  
             remainingGuesses--;
             updateErrorsDisplay();
-            drawHangmanPart(10 - remainingGuesses);
+            drawHangmanPart(10 -mistakes);  
         }
 
         checkGameStatus();

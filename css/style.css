@@ -68,6 +68,14 @@ body {
     filter: brightness(1.1);
 }
 
+.final-buttons button {
+    font-size: 1.5em;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
 #celebration {
     display: none;
     top: 0;

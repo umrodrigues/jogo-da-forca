@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Jogo da Forca</title>
+</head>
+<body>
+
+<div id="game-container">
+    <h1>Jogo da Forca</h1>
+    <div id="hint">Dica: Uma pergunta importante.</div>
+    <div id="word">_ _ _ _   _ _ _ _ _ _ _   _ _ _ _ _ _ _ ?</div>
+    <div id="letters"></div>
+    <canvas id="hangman" width="200" height="200"></canvas>
+    <div id="result"></div>
+    <div id="errors">Erros: 0 | Chances restantes: 6</div>
+</div>
+
+<div id="celebration">
+    <h2>AEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE (⁠╯⁠°⁠□⁠°⁠）⁠╯⁠︵⁠ ⁠┻⁠━⁠┻🎉</h2>
+    <div id="heart">
+        <img src="assets/coracaogif.gif" alt="Balloons">
+    </div>
+    <div id="heart2">
+        <img src="assets/coracaogif.gif" alt="Balloons">
+    </div>
+    <div id="confetti-container"></div>
+    <audio id="celebration-sound" src="sounds/wearethechampions.mp3"></audio>
+</div>
+<script>
+const selectedWord = "QUER NAMORAR COMIGO?".replace(/ /g, "");
+const specialCharacters = ["?", "!"];
+let remainingGuesses = 6;
+let guessedLetters = [];
+let mistakes = 0;
+
+const wordDisplay = document.getElementById("word");
+const lettersContainer = document.getElementById("letters");
+const hangmanCanvas = document.getElementById("hangman");
+const hangmanContext = hangmanCanvas.getContext("2d");
+const resultDisplay = document.getElementById("result");
+const errorsDisplay = document.getElementById("errors");
+
+function drawHangmanPart(part) {
+    hangmanContext.lineWidth = 2;
+    hangmanContext.strokeStyle = "#333";
+
+    switch (part) {
+        case 0: // Base
+            hangmanContext.moveTo(20, 180);
+            hangmanContext.lineTo(180, 180);
+            hangmanContext.stroke();
+            break;
+        case 1: // Poste
+            hangmanContext.moveTo(50, 180);
+            hangmanContext.lineTo(50, 20);
+            hangmanContext.stroke();
+            break;
+        case 2: // Suporte
+            hangmanContext.moveTo(50, 20);
+            hangmanContext.lineTo(130, 20);
+            hangmanContext.stroke();
+            break;
+        case 3: // Corda
+            hangmanContext.moveTo(130, 20);
+            hangmanContext.lineTo(130, 40);
+            hangmanContext.stroke();
+            break;
+        case 4: // Cabeça
+            hangmanContext.beginPath();
+            hangmanContext.arc(130, 60, 20, 0, Math.PI * 2);
+            hangmanContext.stroke();
+            break;
+        case 5: // Corpo
+            hangmanContext.moveTo(130, 80);
+            hangmanContext.lineTo(130, 120);
+            hangmanContext.stroke();
+            break;
+        case 6: // Braço esquerdo
+            hangmanContext.moveTo(130, 90);
+            hangmanContext.lineTo(100, 110);
+            hangmanContext.stroke();
+            break;
+        case 7: // Braço direito
+            hangmanContext.moveTo(130, 90);
+            hangmanContext.lineTo(160, 110);
+            hangmanContext.stroke();
+            break;
+        case 8: // Perna esquerda
+            hangmanContext.moveTo(130, 120);
+            hangmanContext.lineTo(100, 160);
+            hangmanContext.stroke();
+            break;
+        case 9: // Perna direita
+            hangmanContext.moveTo(130, 120);
+            hangmanContext.lineTo(160, 160);
+            hangmanContext.stroke();
+            break;
+        default:
+            break;
+    }
+}
+
+function updateWordDisplay() {
+    let display = "QUER NAMORAR COMIGO?".split("").map(letter =>
+        letter === " " || specialCharacters.includes(letter) ? letter : (guessedLetters.includes(letter) ? letter : "_")
+    ).join(" ");
+    wordDisplay.textContent = display;
+}
+
+function updateErrorsDisplay() {
+    errorsDisplay.textContent = `Erros: ${mistakes} | Chances restantes: ${remainingGuesses}`;
+}
+
+function checkGameStatus() {
+    if (!wordDisplay.textContent.includes("_")) {
+        resultDisplay.textContent = " ";
+        lettersContainer.style.pointerEvents = "none";
+        showFinalButtons();
+    } else if (remainingGuesses === 0) {
+        resultDisplay.textContent = `Você Perdeu! :(`;
+        lettersContainer.style.pointerEvents = "none";
+        showRetryButton();  // Mostrar botão "Tente Novamente"
+    }
+}
+
+function handleLetterClick(event) {
+    let letter = event.target.textContent;
+
+    if (!guessedLetters.includes(letter)) {
+        guessedLetters.push(letter);
+
+        if (selectedWord.includes(letter)) {
+            updateWordDisplay();
+        } else {
+            mistakes++;
+            remainingGuesses--;
+            updateErrorsDisplay();
+            drawHangmanPart(10 - remainingGuesses);
+        }
+
+        checkGameStatus();
+    }
+
+    event.target.style.pointerEvents = "none";
+    event.target.style.backgroundColor = "#ddd";
+}
+
+function createLetterButtons() {
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    alphabet.split("").forEach(letter => {
+        let button = document.createElement("div");
+        button.textContent = letter;
+        button.className = "letter";
+        button.addEventListener("click", handleLetterClick);
+        lettersContainer.appendChild(button);
+    });
+}
+
+function showFinalButtons() {
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.className = "final-buttons";
+
+    const yesButton = document.createElement("button");
+    yesButton.textContent = "Sim";
+    yesButton.addEventListener("click", handleFirstYesClick);
+
+    const noButton = document.createElement("button");
+    noButton.textContent = "Não";
+    noButton.addEventListener("click", handleNoClick);
+
+    buttonsContainer.appendChild(yesButton);
+    buttonsContainer.appendChild(noButton);
+
+    resultDisplay.appendChild(buttonsContainer);
+}
+
+function handleFirstYesClick() {
+    resultDisplay.textContent = "Tem certeza disso?";
+    resultDisplay.innerHTML = "Tem certeza disso? (⁠;⁠ŏ⁠﹏⁠ŏ⁠)";
+
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.className = "final-buttons";
+
+    const yesButton = document.createElement("button");
+    yesButton.textContent = "Sim";
+    yesButton.addEventListener("click", showCelebration);
+
+    const noButton = document.createElement("button");
+    noButton.textContent = "Não";
+    noButton.addEventListener("click", handleNoClick);
+
+    buttonsContainer.appendChild(yesButton);
+    buttonsContainer.appendChild(noButton);
+
+    resultDisplay.appendChild(buttonsContainer);
+}
+
+function handleNoClick() {
+    resultDisplay.textContent = "Você escolheu não :(";
+    resultDisplay.innerHTML = ""; 
+}
+
+function showRetryButton() {
+    const retryButton = document.createElement("button");
+    retryButton.textContent = "Tente Novamente";
+    retryButton.className = "final-buttons";
+    retryButton.addEventListener("click", function () {
+        location.reload();
+    });
+
+    resultDisplay.appendChild(retryButton);
+}
+
+function createConfetti() {
+    const confettiContainer = document.getElementById("confetti-container");
+
+    for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement("div");
+        confetti.className = "confetti";
+        confetti.style.left = `${Math.random() * 100}vw`;
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        confetti.style.animationDelay = `${Math.random() * 3}s`;
+        confettiContainer.appendChild(confetti);
+    }
+}
+
+function showCelebration() {
+    const celebrationDiv = document.getElementById("celebration");
+    celebrationDiv.style.display = "block";
+
+    createConfetti();
+
+    const celebrationSound = document.getElementById("celebration-sound");
+    celebrationSound.play();
+
+    setTimeout(() => {
+        celebrationDiv.style.display = "none";
+    }, 25000); // Fechar após 25 segundos
+}
+
+function initGame() {
+    drawHangmanPart(0); // Desenhar a base inicial da forca
+    drawHangmanPart(1); // Desenhar o poste da forca
+    drawHangmanPart(2); // Desenhar o suporte da forca
+    drawHangmanPart(3); // Desenhar a corda da forca
+    updateWordDisplay();
+    createLetterButtons();
+}
+
+initGame();
+
+</script>
+</body>
+</html>

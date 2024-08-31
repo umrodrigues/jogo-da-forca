@@ -92,27 +92,21 @@ body {
     font-size: 3em;
 }
 #heart {
-    position: absolute;
-    bottom: -200px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: fixed;
+    top: -100px;
+    left: 0;         
+    width: 100%;     
+    height: 100%;   
     display: flex;
-    justify-content: left;
-    width: 70%;
-    height: 70%;
+    justify-content: center;
+    align-items: center;
     animation: rise 5s forwards;
+    transform: none;
+    > img {
+        width: 50%;
+    }
 }
-#heart2 {
-    position: absolute;
-    bottom: -200px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: right;
-    width: 70%;
-    height: 70%;
-    animation: rise 5s forwards;
-}
+
 @keyframes rise {
     from { bottom: -200px; opacity: 0; }
     to { bottom: 70%; opacity: 1; }

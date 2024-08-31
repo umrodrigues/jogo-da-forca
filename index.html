@@ -23,9 +23,6 @@
     <div id="heart">
         <img src="assets/coracaogif.gif" alt="Balloons">
     </div>
-    <div id="heart2">
-        <img src="assets/coracaogif.gif" alt="Balloons">
-    </div>
     <div id="confetti-container"></div>
     <audio id="celebration-sound" src="sounds/wearethechampions.mp3"></audio>
 </div>
@@ -235,6 +232,8 @@ function showCelebration() {
     const celebrationDiv = document.getElementById("celebration");
     celebrationDiv.style.display = "block";
 
+    celebrationDiv.scrollIntoView({ behavior: 'smooth' });
+
     createConfetti();
 
     const celebrationSound = document.getElementById("celebration-sound");
@@ -244,6 +243,7 @@ function showCelebration() {
         celebrationDiv.style.display = "none";
     }, 25000); // Fechar após 25 segundos
 }
+
 
 function initGame() {
     drawHangmanPart(0); // Desenhar a base inicial da forca

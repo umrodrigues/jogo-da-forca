@@ -199,10 +199,22 @@ function handleFirstYesClick() {
 }
 
 function handleNoClick() {
+    resultDisplay.textContent = "";
 
-    //TODO - Refact para quando clicar não, apresentar mensagem
-    location.reload();
+    const message = document.createElement("h2");
+    message.textContent = "Você tem certeza que não quer reconsiderar? 😢";
+    resultDisplay.appendChild(message);
+
+    const retryButton = document.createElement("button");
+    retryButton.textContent = "Tente Novamente";
+    retryButton.className = "final-buttons";
+    retryButton.addEventListener("click", function () {
+        location.reload();
+    });
+
+    resultDisplay.appendChild(retryButton);
 }
+
 
 function showRetryButton() {
     const retryButton = document.createElement("button");

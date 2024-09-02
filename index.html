@@ -11,7 +11,7 @@
 <div id="game-container">
     <h1>Jogo da Forca</h1>
     <div id="hint">Dica: Uma pergunta importante.</div>
-    <div id="word">_ _ _ _   _ _ _ _ _ _ _   _ _ _ _ _ _ _ ?</div>
+    <div id="word">_ _ _ _ _  _ _ _ _   _ _ _ _ _ _ _   _ _ _ _ _ _ _ ?</div>
     <div id="letters"></div>
     <canvas id="hangman" width="200" height="200"></canvas>
     <div id="result"></div>
@@ -27,8 +27,8 @@
     <audio id="celebration-sound" src="sounds/wearethechampions.mp3"></audio>
 </div>
 <script>
-const selectedWord = "QUER NAMORAR COMIGO?".replace(/ /g, "");
-const specialCharacters = ["?", "!"];
+const selectedWord = "CAROL, QUER NAMORAR COMIGO?".replace(/ /g, "");
+const specialCharacters = ["?", "!", ","];
 let remainingGuesses = 6;
 let guessedLetters = [];
 let mistakes = 0;
@@ -104,11 +104,12 @@ function drawHangmanPart(part) {
 }
 
 function updateWordDisplay() {
-    let display = "QUER NAMORAR COMIGO?".split("").map(letter =>
+    let display = "CAROL, QUER NAMORAR COMIGO?".split("").map(letter =>
         letter === " " || specialCharacters.includes(letter) ? letter : (guessedLetters.includes(letter) ? letter : "_")
-    ).join(" ");
+    ).join("");
     wordDisplay.textContent = display;
 }
+
 
 function updateErrorsDisplay() {
     errorsDisplay.textContent = `Erros: ${mistakes} | Chances restantes: ${remainingGuesses}`;

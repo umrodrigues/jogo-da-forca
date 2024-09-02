@@ -26,6 +26,8 @@
     <div id="confetti-container"></div>
     <audio id="celebration-sound" src="sounds/wearethechampions.mp3"></audio>
 </div>
+
+<audio id="lose-sound" src="sounds/failSound.mp3"></audio> 
 <script>
 const selectedWord = "CAROL, QUER NAMORAR COMIGO?".replace(/ /g, "");
 const specialCharacters = ["?", "!", ","];
@@ -123,9 +125,14 @@ function checkGameStatus() {
     } else if (remainingGuesses === 0) {
         resultDisplay.textContent = `Você Perdeu! :(`;
         lettersContainer.style.pointerEvents = "none";
+        
+        const loseSound = document.getElementById("lose-sound");
+        loseSound.play();
+
         showRetryButton();  // Mostrar botão "Tente Novamente"
     }
 }
+
 
 function handleLetterClick(event) {
     let letter = event.target.textContent;

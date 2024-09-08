@@ -27,6 +27,20 @@
     <audio id="celebration-sound" src="sounds/wearethechampions.mp3"></audio>
 </div>
 
+<div id="patoda1" style="display: none">
+    <h2>E mais uma coisa</h2>
+</div>
+
+
+<div id="patoda2" style="display: none">
+    <h2>TE QUERO PATODA VIDA</h2>
+    <div id="patodaimage">
+        <img src="assets/pato.jpeg" alt="pato">
+    </div>
+    <div id="confetti-container"></div>
+    <audio id="patoda-sound" src="sounds/ducksound.mp3"></audio>
+</div>
+
 <audio id="lose-sound" src="sounds/failSound.mp3"></audio> 
 <script>
 const selectedWord = "CAROL, QUER NAMORAR COMIGO?".replace(/ /g, "");
@@ -194,7 +208,7 @@ function handleFirstYesClick() {
 
     const yesButton = document.createElement("button");
     yesButton.textContent = "Sim";
-    yesButton.addEventListener("click", showCelebration);
+    yesButton.addEventListener("click", executeFinalFunctions);
 
     const noButton = document.createElement("button");
     noButton.textContent = "Não";
@@ -249,19 +263,51 @@ function createConfetti() {
 }
 
 function showCelebration() {
-    const celebrationDiv = document.getElementById("celebration");
-    celebrationDiv.style.display = "block";
+    return new Promise((resolve) => {
+        const celebrationDiv = document.getElementById("celebration");
+        celebrationDiv.style.display = "block";
+        celebrationDiv.scrollIntoView({ behavior: 'smooth' });
 
-    celebrationDiv.scrollIntoView({ behavior: 'smooth' });
+        createConfetti();
+        
+        const celebrationSound = document.getElementById("celebration-sound");
+        celebrationSound.play();
 
-    createConfetti();
+        setTimeout(() => {
+            celebrationDiv.style.display = "none";
+            resolve();
+        }, 25000); // Fechar após 25 segundos
+    });
+}
 
-    const celebrationSound = document.getElementById("celebration-sound");
-    celebrationSound.play();
+function patoda1() {
+    const patoda1Div = document.getElementById("patoda1");
+    patoda1Div.style.display = "block";
 
     setTimeout(() => {
-        celebrationDiv.style.display = "none";
-    }, 25000); // Fechar após 25 segundos
+        patoda1Div.style.display = "none";
+        }, 10000); // Fechar após 10 segundos
+}
+
+function patoda2() {
+    const patoda2Div = document.getElementById("patoda2");
+    patoda2Div.style.display = "block";
+
+    const celebrationSound = document.getElementById("patoda-sound");
+        celebrationSound.play();
+
+    setTimeout(() => {
+        patoda2Div.style.display = "none";
+        }, 10000); // Fechar após 10 segundos
+}
+
+function executeFinalFunctions() {
+    showCelebration().then(() => {
+        patoda1();
+        setTimeout(() => {
+            patoda2();
+        }, 10000); 
+    });
 }
 
 
